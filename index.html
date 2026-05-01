@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CMR College of Engineering and Technology – Examination Results</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #1a3a6b;
+      --accent: #e05a1a;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --bg: #f0f2f5;
+      --card: #ffffff;
+      --pass: #16a34a;
+      --fail: #dc2626;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px 16px 40px;
+    }
+
+    .cmr-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .cmr-logo svg { width: 88px; height: auto; }
+    .cmr-tagline {
+      font-size: .63rem;
+      letter-spacing: .18em;
+      color: var(--blue);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .search-wrapper {
+      max-width: 480px;
+      margin: 0 auto 28px;
+      background: var(--card);
+      border-radius: 16px;
+      padding: 28px 24px;
+      box-shadow: 0 1px 6px rgba(0,0,0,.09);
+    }
+
+    .college-name {
+      font-family: 'DM Serif Display', serif;
+      color: var(--blue);
+      font-size: 1.22rem;
+      text-align: center;
+      line-height: 1.35;
+      margin-bottom: 4px;
+    }
+
+    .portal-sub {
+      font-size: 1.05rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 22px;
+      color: var(--text);
+    }
+
+    label {
+      display: block;
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: .97rem;
+      font-family: inherit;
+      color: var(--text);
+      outline: none;
+      transition: border-color .2s;
+      margin-bottom: 16px;
+    }
+    input[type="text"]:focus { border-color: var(--blue); }
+
+    select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: .97rem;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--card);
+      outline: none;
+      appearance: none;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: border-color .2s;
+    }
+    select:focus { border-color: var(--blue); }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: .97rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+    }
+    .btn:hover  { background: #122d56; }
+    .btn:active { transform: scale(.98); }
+
+    /* Results */
+    #results { max-width: 480px; margin: 0 auto; display: none; }
+
+    .results-header { text-align: center; margin-bottom: 16px; }
+
+    .results-college {
+      font-family: 'DM Serif Display', serif;
+      color: var(--blue);
+      font-size: 1.15rem;
+      line-height: 1.35;
+      margin-bottom: 2px;
+    }
+
+    .results-sub {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .go-back {
+      display: inline-block;
+      font-size: .82rem;
+      color: var(--muted);
+      cursor: pointer;
+      text-decoration: underline;
+      margin-bottom: 12px;
+    }
+    .go-back:hover { color: var(--blue); }
+
+    .exam-label {
+      font-size: .9rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .hall-ticket-display {
+      font-size: 1.55rem;
+      font-weight: 800;
+      letter-spacing: .2em;
+      color: var(--blue);
+      background: #eef1f8;
+      border-radius: 10px;
+      padding: 12px 16px;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .processed {
+      font-size: .75rem;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+      animation: fadeUp .35s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .field { margin-bottom: 16px; }
+    .field:last-child { margin-bottom: 0; }
+
+    .field-label {
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .field-value {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .pass { color: var(--pass); }
+    .fail { color: var(--fail); }
+
+    .subject-card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+      border-left: 4px solid var(--accent);
+      animation: fadeUp .4s ease both;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 32px 0;
+      color: var(--muted);
+      font-size: .97rem;
+    }
+
+    /* Footer note */
+    .footer-note {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-top: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+      font-size: .85rem;
+      color: var(--text);
+      line-height: 1.75;
+    }
+    .footer-note p { margin-bottom: 2px; }
+
+    .print-btn {
+      display: block;
+      margin: 16px 0 0 auto;
+      padding: 10px 32px;
+      background: #5a6170;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: .97rem;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .print-btn:hover { background: #3e444f; }
+
+    .powered-by {
+      text-align: center;
+      margin-top: 22px;
+      font-size: .85rem;
+      color: var(--muted);
+      padding-bottom: 10px;
+    }
+    .powered-by strong {
+      color: var(--blue);
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: .03em;
+    }
+
+    @media print {
+      .search-wrapper, .go-back, .print-btn { display: none !important; }
+      #results { display: block !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Search Form ── -->
+  <div class="search-wrapper">
+
+        <div class="cmr-logo">
+      <img src="cmr-logo.png" alt="CMR Logo" style="width:130px; height:auto;">
+    </div>
+
+    <p class="college-name">CMR College of Engineering<br>and Technology</p>
+    <p class="portal-sub">Examination Results</p>
+
+    <label for="hallTicket">Hall Ticket Number</label>
+    <input type="text" id="hallTicket" placeholder="e.g. 23H51A6662" maxlength="12"/>
+
+    <label for="examSelect">Select Examination</label>
+    <select id="examSelect">
+      <option value="">-- Choose Examination --</option>
+      <option value="btech_vi_2026">B.Tech VI Semester Regular Examinations 2026</option>
+    </select>
+
+    <button class="btn" onclick="fetchResult()">Get Result</button>
+  </div>
+
+  <!-- ── Results ── -->
+  <div id="results">
+
+    <div class="results-header">
+            <div class="cmr-logo" style="margin-bottom:6px">
+        <img src="cmr-logo.png" alt="CMR Logo" style="width:100px; height:auto;">
+      </div>
+      <p class="results-college">CMR College of Engineering<br>and Technology</p>
+      <p class="results-sub">Examination Results</p>
+      <span class="go-back" onclick="goBack()">Go Back</span>
+      <p class="exam-label" id="examLabel"></p>
+      <div class="hall-ticket-display" id="hallTicketDisplay"></div>
+      <p class="processed" id="processedTime"></p>
+    </div>
+
+    <div class="card" id="studentCard"></div>
+    <div id="subjectsContainer"></div>
+
+    <!-- Footer legend -->
+    <div class="footer-note" id="footerNote" style="display:none">
+      <p>AB = Absent, F = Fail, A, B, C, D are grades.</p>
+      <p>SGPA = Semester Grade Point Average, C = Credits, GP = Grade Point, G = Grade.</p>
+      <p>C in Credits represents Credit Less Subject. CMP in Grade represents Completed.</p>
+      <button class="print-btn" onclick="window.print()">Print</button>
+    </div>
+
+    <div class="powered-by" id="poweredBy" style="display:none">
+      Powered By <strong>DHONDI</strong>
+    </div>
+
+  </div>
+
+<script>
+  const db = {
+    "23H51A6662": {
+      name: "VACHAN BALGOORI VED",
+      branch: "CSE (ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING)",
+      creditsSecured: 20,
+      sgpa: 5.75,
+      status: "PASS",
+      subjects: [
+        { code: "A400001", name: "MATRICES AND CALCULUS",                                        credits: 4,   gradePoint: 5, grade: "C"  },
+        { code: "A400008", name: "APPLIED PHYSICS",                                              credits: 4,   gradePoint: 5, grade: "C"  },
+        { code: "A400101", name: "ENGLISH FOR SKILL ENHANCEMENT",                               credits: 2,   gradePoint: 7, grade: "B+" },
+        { code: "A400501", name: "APPLIED PHYSICS LABORATORY",                                  credits: 1.5, gradePoint: 7, grade: "B+" },
+        { code: "A400503", name: "ENGLISH LANGUAGE AND COMMUNICATORY SKILLS LABORATORY",        credits: 1,   gradePoint: 8, grade: "A"  },
+        { code: "A400505", name: "INTRODUCTION TO SOCIAL INNOVATION",                           credits: 1,   gradePoint: 6, grade: "B"  },
+        { code: "A405201", name: "PROGRAMMING FOR PROBLEM SOLVING",                             credits: 3,   gradePoint: 5, grade: "C"  },
+        { code: "A405501", name: "ELEMENTS OF COMPUTER SCIENCE",                                credits: 1,   gradePoint: 5, grade: "C"  },
+        { code: "A405502", name: "PROGRAMMING FOR PROBLEM SOLVING LABORATORY",                  credits: 1,   gradePoint: 6, grade: "B"  },
+        { code: "A405504", name: "IT WORKSHOP",                                                 credits: 1.5, gradePoint: 7, grade: "B+" },
+        { code: "A400704", name: "UNIVERSAL HUMAN VALUES",                                      credits: 0,   gradePoint: 5, grade: "P"  },
+      ]
+    },
+    "22A91A0502": {
+      name: "JOHN DOE",
+      branch: "ECE",
+      creditsSecured: 34,
+      sgpa: 7.2,
+      status: "PASS",
+      subjects: [
+        { code: "EC601", name: "VLSI DESIGN",                      credits: 4, gradePoint: 7,  grade: "B+"  },
+        { code: "EC602", name: "DIGITAL SIGNAL PROCESSING",        credits: 4, gradePoint: 8,  grade: "A"   },
+        { code: "EC603", name: "WIRELESS COMMUNICATIONS",          credits: 4, gradePoint: 7,  grade: "B+"  },
+        { code: "EC604", name: "ANTENNA & WAVE PROPAGATION",       credits: 3, gradePoint: 6,  grade: "B"   },
+        { code: "EC605", name: "MICROPROCESSORS & CONTROLLERS",    credits: 3, gradePoint: 8,  grade: "A"   },
+        { code: "EC606", name: "EMBEDDED SYSTEMS",                 credits: 3, gradePoint: 7,  grade: "B+"  },
+        { code: "EC607", name: "OPTICAL FIBER COMMUNICATION",      credits: 3, gradePoint: 6,  grade: "B"   },
+        { code: "EC608", name: "RADAR & NAVIGATIONAL AIDS",        credits: 3, gradePoint: 7,  grade: "B+"  },
+        { code: "EC609", name: "INTERNET OF THINGS",               credits: 3, gradePoint: 8,  grade: "A"   },
+        { code: "EC610", name: "PROJECT WORK",                     credits: 2, gradePoint: 9,  grade: "A+"  },
+        { code: "EC611", name: "SEMINAR",                          credits: 1, gradePoint: 10, grade: "CMP" },
+      ]
+    }
+  };
+
+  function fetchResult() {
+    const ht   = document.getElementById('hallTicket').value.trim().toUpperCase();
+    const exam = document.getElementById('examSelect').value;
+    const res  = document.getElementById('results');
+
+    if (!ht)   { alert('Please enter your Hall Ticket Number.'); return; }
+    if (!exam) { alert('Please select an examination.'); return; }
+
+    const examNames = { btech_vi_2026: "B.Tech VI Semester Regular Examinations 2026" };
+    const student   = db[ht];
+
+    res.style.display = 'block';
+    document.getElementById('examLabel').textContent       = examNames[exam];
+    document.getElementById('hallTicketDisplay').textContent = ht.split('').join(' ');
+    document.getElementById('processedTime').textContent   =
+      `Request processed in ${(Math.random()*.12+.05).toFixed(2)} seconds`;
+
+    const card  = document.getElementById('studentCard');
+    const subs  = document.getElementById('subjectsContainer');
+    const fnote = document.getElementById('footerNote');
+    const pby   = document.getElementById('poweredBy');
+
+    if (!student) {
+      card.innerHTML = `<div class="no-results">⚠️ No result found for Hall Ticket <strong>${ht}</strong>.<br>Please check and try again.</div>`;
+      subs.innerHTML = '';
+      fnote.style.display = 'none';
+      pby.style.display   = 'none';
+      res.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+
+    const statusClass = student.status === 'PASS' ? 'pass' : 'fail';
+
+    card.innerHTML = `
+      <div class="field"><div class="field-label">Hall Ticket</div><div class="field-value">${ht}</div></div>
+      <div class="field"><div class="field-label">Full Name</div><div class="field-value">${student.name}</div></div>
+      <div class="field"><div class="field-label">Branch</div><div class="field-value">${student.branch}</div></div>
+      <div class="field"><div class="field-label">Credits Secured</div><div class="field-value">${student.creditsSecured}</div></div>
+      <div class="field"><div class="field-label">SGPA</div><div class="field-value">${student.sgpa}</div></div>
+      <div class="field"><div class="field-label">Result Status</div><div class="field-value ${statusClass}">${student.status}</div></div>
+    `;
+
+    subs.innerHTML = student.subjects.map((s, i) => `
+      <div class="subject-card" style="animation-delay:${i * .06}s">
+        <div class="field"><div class="field-label">Subject Code</div><div class="field-value">${s.code}</div></div>
+        <div class="field"><div class="field-label">Subject</div><div class="field-value">${s.name}</div></div>
+        <div class="field"><div class="field-label">Credits</div><div class="field-value">${s.credits}</div></div>
+        <div class="field"><div class="field-label">Grade Point</div><div class="field-value">${s.gradePoint}</div></div>
+        <div class="field"><div class="field-label">Grade</div><div class="field-value">${s.grade}</div></div>
+      </div>
+    `).join('');
+
+    fnote.style.display = 'block';
+    pby.style.display   = 'block';
+    res.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function goBack() {
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('hallTicket').value = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
